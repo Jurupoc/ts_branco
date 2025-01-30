@@ -3,34 +3,36 @@ from src.negocio.ContaEspecial import ContaEspecial
 
 import unittest
 
-class test_conta_especial_debito(unittest.TestCase):
-    def test_conta_especial_debito(self):
-        conta = ContaEspecial("123", 100.0)
-        conta.debitar(50.0)
-        self.assertEqual(conta.getSaldo(), 50.0, msg= "O saldo da conta deveria ser 50.0")
 
-class test_conta_especial_debito_saldo_insuficiente(unittest.TestCase):
-    def test_conta_especial_debito_saldo_insuficiente(self):
-        conta = ContaEspecial("123", 100.0)
-        with self.assertRaises(SaldoInsuficienteException):
-            conta.debitar(150.0)
+class TestContaEspecial(unittest.TestCase):
+    def setUp(self):
+        self.conta = ContaEspecial("12345", 100.0)
 
-class test_conta_especial_numero(unittest.TestCase):
-    def test_conta_especial_numero(self):
-        conta = ContaEspecial("123", 100.0)
-        self.assertEqual(conta.getNumero(), "123", msg= "O número da conta deveria ser 123")
+    def test_getters_and_setters(self):
+        self.assertEqual(self.conta.getBonus(), 0.0)
 
-class test_conta_especial_saldo_inicial_negativo(unittest.TestCase):
-    def test_conta_especial_saldo_inicial_negativo(self):
-        conta = ContaEspecial("123", -100.0)
-        self.assertEqual(conta.getSaldo(), 0.0, msg= "O saldo da conta deveria ser 0.0")
+        self.conta.setBonus(50.0)
+        self.assertEqual(self.conta.getBonus(), 50.0)
+
+    def test_creditar(self):
+        self.conta.creditar(200.0)
+        self.assertEqual(self.conta.getSaldo(), 300.0)  # 100 + 200
+        self.assertEqual(self.conta.getBonus(), 2.0)  # 1% de 200
+
+    def test_renderbonus(self):
+        self.conta.setBonus(10.0)
+        self.conta.renderbonus()
+        self.assertEqual(self.conta.getSaldo(), 110.0)  # 100 + 10
+        self.assertEqual(self.conta.getBonus(), 0.0)
+
+    def test_get_tipo(self):
+        self.assertEqual(self.conta.get_tipo(), "especial")
+
 
 def runContaEspecialTests():
-    suite =        unittest.defaultTestLoader.loadTestsFromTestCase(test_conta_especial_debito)
-    suite.addTests(unittest.defaultTestLoader.loadTestsFromTestCase(test_conta_especial_debito_saldo_insuficiente))
-    suite.addTests(unittest.defaultTestLoader.loadTestsFromTestCase(test_conta_especial_numero))
-    suite.addTests(unittest.defaultTestLoader.loadTestsFromTestCase(test_conta_especial_saldo_inicial_negativo))
+    suite = unittest.defaultTestLoader.loadTestsFromTestCase(TestContaEspecial)
     unittest.TextTestRunner(verbosity=2, failfast=True).run(suite)
+
 
 if __name__ == '__main__':
     runContaEspecialTests()
