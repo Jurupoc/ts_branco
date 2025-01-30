@@ -1,3 +1,5 @@
+## Cobertura atual dos testes Unitarios:
+![WhatsApp Image 2025-01-30 at 06 27 52_d472325e](https://github.com/user-attachments/assets/aeb445df-7549-4182-aba6-4b78bb40922f)
 
 ## Instalação de dependências e preparação do ambiente
 OBS: é necessário o python **3.12+**
